@@ -1,7 +1,7 @@
 'use client';
 
 import { Dropdown } from "@/components/dropdown";
-import { job_categories } from "@/app/page";
+import { job_categories } from "@/components/job_categories";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useJobs } from "@/components/jobprovider";

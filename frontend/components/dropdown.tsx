@@ -1,5 +1,5 @@
 'use client';
-import { job_categories } from "@/app/page";
+import { job_categories } from "./job_categories";
 
 interface DropdownProps {
   selectedCategory: string;

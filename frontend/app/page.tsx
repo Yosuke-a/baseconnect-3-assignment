@@ -5,10 +5,7 @@ import { CategorySelect } from "@/components/category";
 import { JobCard } from "@/components/jobcard";
 import { useEffect, useState, useRef } from "react";
 import { useJobs } from "@/components/jobprovider";
-
-export const job_categories = [
-  "事務", "エンジニア", "営業", "デザイン", "マーケティング", "財務・経理", "人事", "カスタマーサポート", "製造", "医療・介護"
-];
+import { job_categories } from "@/components/job_categories";
 
 interface Job {
   title: string;
