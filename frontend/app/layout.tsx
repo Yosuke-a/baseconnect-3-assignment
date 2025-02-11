@@ -1,4 +1,6 @@
 import { JobsProvider } from "@/components/jobprovider";
+import { Header } from "@/components/header";
+import "@/app/globals.css";
 
 export default function RootLayout({
   children,
@@ -8,6 +10,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body>
+        <Header />
         <JobsProvider>{children}</JobsProvider>
       </body>
     </html>
