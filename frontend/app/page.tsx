@@ -22,7 +22,7 @@ export default function App() {
 
   const fetchJobs = async () => {
     try {
-      const response = await fetch('http://localhost:3001/jobs');
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
