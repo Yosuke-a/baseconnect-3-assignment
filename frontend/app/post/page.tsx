@@ -22,7 +22,8 @@ export default function Post() {
               income,
             };
 
-            const response = await fetch('${process.env.NEXT_PUBLIC_API_URL}/jobs', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs`
+              , {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
