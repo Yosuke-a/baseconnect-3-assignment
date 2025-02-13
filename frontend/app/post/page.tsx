@@ -15,6 +15,7 @@ export default function Post() {
 
     const handleSubmit = async(e: React.FormEvent) => {
         e.preventDefault();
+        console.log("NEXT_PUBLIC_API_URL:", process.env.NEXT_PUBLIC_API_URL);
         try {
             const newJob = {
               title,
