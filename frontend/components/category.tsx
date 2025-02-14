@@ -25,7 +25,7 @@ interface Category {
     };
   
     return (
-      <div>
+      <div className="grid gap-0">
         {categories.map((category) => (
           <label key={category.id}>
             <input

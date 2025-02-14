@@ -5,15 +5,20 @@ import { job_categories } from "@/components/job_categories";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useJobs } from "@/components/jobprovider";
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default function Post() {
-    const {addJob} = useJobs();
+    const { addJob } = useJobs();
     const [title, setTitle] = useState("");
     const [selectedCategory, setSelectedCategory] = useState(job_categories[0]);  
     const [income, setIncome] = useState(0);
     const router = useRouter();
 
-    const handleSubmit = async(e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             const newJob = {
@@ -22,29 +27,25 @@ export default function Post() {
               income,
             };
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/jobs`
-              , {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(newJob),
-            });
+            const { error } = await supabase
+              .from("jobs")
+              .insert([newJob])
+              .select();
 
-            if (response.ok) {
-                addJob(newJob);  
-                setTitle("");
-                setSelectedCategory(job_categories[0] || "");  
-                setIncome(0);
-                router.push("/");
-            } else {
-                console.error("求人投稿に失敗しました");
+            if (error) {
+                throw new Error(`Supabaseエラー: ${error.message}`);
             }
+
+            addJob(newJob);  
+            setTitle("");
+            setSelectedCategory(job_categories[0] || "");  
+            setIncome(0);
+            router.push("/");
         } catch (error) {
-            console.error("エラー:", error);
+            console.error("求人投稿エラー:", error);
         }
     };
-
+    
     return (
         <div className="max-w-lg mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
           <h1 className="text-2xl font-bold mb-4">求人投稿</h1>
