@@ -5,11 +5,7 @@ import { job_categories } from "@/components/job_categories";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useJobs } from "@/components/jobprovider";
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { addJobToDB } from "@/components/actions";
 
 export default function Post() {
     const { addJob } = useJobs();
@@ -20,23 +16,10 @@ export default function Post() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
         try {
-            const newJob = {
-              title,
-              category: selectedCategory,
-              income,
-            };
-
-            const { error } = await supabase
-              .from("jobs")
-              .insert([newJob])
-              .select();
-
-            if (error) {
-                throw new Error(`Supabaseエラー: ${error.message}`);
-            }
-
-            addJob(newJob);  
+            await addJobToDB(title, selectedCategory, income);
+            addJob({ title, category: selectedCategory, income });
             setTitle("");
             setSelectedCategory(job_categories[0] || "");  
             setIncome(0);
@@ -45,7 +28,7 @@ export default function Post() {
             console.error("求人投稿エラー:", error);
         }
     };
-    
+
     return (
         <div className="max-w-lg mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
           <h1 className="text-2xl font-bold mb-4">求人投稿</h1>
@@ -79,8 +62,13 @@ export default function Post() {
               />
             </div>
     
-            <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">投稿する</button> 
+            <button 
+              type="submit" 
+              className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition-all"
+            >
+              投稿する
+            </button> 
           </form>
         </div>
-      );
+    );
 }

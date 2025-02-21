@@ -9,7 +9,6 @@ export const IncomeSelect = ({income, setIncome }: { income: number ;setIncome: 
                 <option value="400">400万円以上</option>
                 <option value="600">600万円以上</option>
                 <option value="800">800万円以上</option>
-
             </select>
         </div>
     )
