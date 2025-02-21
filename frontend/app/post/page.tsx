@@ -16,9 +16,18 @@ export default function Post() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
         try {
-            await addJobToDB(title, selectedCategory, income);
+            const formData = new FormData();
+            formData.append("title", title);
+            formData.append("category", selectedCategory);
+            formData.append("income", String(income));
+
+            const response = await addJobToDB(formData);
+
+            if (!response.success) {
+                throw new Error(response.message);
+            }
+
             addJob({ title, category: selectedCategory, income });
             setTitle("");
             setSelectedCategory(job_categories[0] || "");  
@@ -28,7 +37,7 @@ export default function Post() {
             console.error("求人投稿エラー:", error);
         }
     };
-
+    
     return (
         <div className="max-w-lg mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg">
           <h1 className="text-2xl font-bold mb-4">求人投稿</h1>
@@ -62,13 +71,10 @@ export default function Post() {
               />
             </div>
     
-            <button 
-              type="submit" 
-              className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition-all"
-            >
+            <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
               投稿する
             </button> 
           </form>
         </div>
-    );
+      );
 }
