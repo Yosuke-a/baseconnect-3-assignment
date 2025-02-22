@@ -8,7 +8,7 @@ import { job_categories } from "@/components/job_categories";
 
 export default function Post() {
   const [title, setTitle] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState(job_categories[0]);  
+  const [selectedCategory, setSelectedCategory] = useState("");  
   const [income, setIncome] = useState(0);
   const router = useRouter();
 
@@ -37,9 +37,12 @@ export default function Post() {
       <h1 className="text-2xl font-bold mb-4">求人投稿</h1>
       <form onSubmit={handleSubmit} className="space-y-4"> 
         <Dropdown selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
-        <input type="number" value={income} onChange={(e) => setIncome(Number(e.target.value))} />
-        <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
-        <button type="submit">投稿する</button> 
+        <h1>年収を入力(万円)</h1>
+        <input type="number" value={income} onChange={(e) => setIncome(Number(e.target.value))} className="border border-gray-300 rounded p-2 w-full"/>
+        <h1>求人タイトルを入力</h1>
+        <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} className="border border-gray-300 rounded p-2 w-full" />
+        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+        >投稿する</button> 
       </form>
     </div>
   );

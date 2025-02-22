@@ -1,25 +1,23 @@
 "use server";
 
-import { createClient } from "@supabase/supabase-js";
+import { Pool } from "pg";
 
-const supabaseUrl = process.env.SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!; 
-const supabase = createClient(supabaseUrl, supabaseServiceKey, { auth: { persistSession: false } });
+const pool = new Pool ({
+    connectionString: process.env.POSTGRES_URL,
+})
 
 export async function getJobs() {
-  try {
-    const { data, error } = await supabase.from("jobs").select("*");
-
-    if (error) {
-      throw new Error(`データ取得エラー: ${error.message}`);
-    }
-
-    return data ?? []; 
-  } catch (error) {
-    console.error("getJobs() のエラー:", error);
-    return [];
-  }
-}
+    try {
+        const client = await pool.connect();
+        const result = await client.query("SELECT * FROM jobs");
+        client.release();
+    
+        return result.rows;
+      } catch (error) {
+        console.error("データ取得エラー:", error);
+        return [];
+      }
+    } 
 
 
 export async function addJobToDB(formData: FormData) {
@@ -32,15 +30,13 @@ export async function addJobToDB(formData: FormData) {
       throw new Error("入力データが正しくありません");
     }
 
-    const { error } = await supabase.from("jobs").insert([{ title, category, income }]);
-
-    if (error) {
-      throw new Error(`Supabase エラー: ${error.message}`);
-    }
+    const client = await pool.connect();
+    await client.query("INSERT INTO jobs (title, category, income) VALUES ($1, $2, $3)", [title, category, income]);
+    client.release();
 
     return { success: true };
   } catch (error) {
-    console.error("addJobToDB() のエラー:", error);
-    return { success: false, message: error instanceof Error ? error.message : "不明なエラーが発生しました" };
+    console.error("求人投稿エラー:", error);
+    return { success: false, message: "エラーが発生しました" };
   }
 }

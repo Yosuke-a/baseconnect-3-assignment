@@ -12,7 +12,7 @@ export const Dropdown = ({ selectedCategory, setSelectedCategory }: DropdownProp
   };
 
   return (
-    <select value={selectedCategory} onChange={handleChange}>
+    <select value={selectedCategory} onChange={handleChange} className="border border-gray-300 rounded p-2 w-full">
       <option value="" disabled>カテゴリを選択</option> 
       {job_categories.map((job_category) => (
         <option key={job_category} value={job_category}>
