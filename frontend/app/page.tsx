@@ -33,6 +33,14 @@ export default function JobsPage() {
     fetchJobs();
   }, []);
 
+  const filteredJobs = jobs.filter((job) => {
+    const incomeCondition = income === 0 || job.income >= income;
+    const categoryCondition =
+      categories.every((cat) => !cat.state) ||
+      categories.some((cat) => cat.state && cat.category === job.category);
+    return incomeCondition && categoryCondition;
+  });
+
   return (
     <div className="flex min-h-screen bg-gray-100 p-6">
       <div className="w-1/4 bg-white shadow-lg p-4 rounded-lg">
@@ -45,11 +53,11 @@ export default function JobsPage() {
       <div className="w-3/4 ml-6">
         <h1 className="text-2xl font-bold mb-4">求人一覧</h1>
         <h2 className="text-lg mb-4">
-          該当件数: {jobs.length}件
+          該当件数: {filteredJobs.length}件
         </h2>
 
         <div className="flex flex-col gap-4">
-          {jobs.map((job) => (
+          {filteredJobs.map((job) => (
             <JobCard key={job.id} job={job} className="shadow-md bg-white p-4 rounded-lg" />
           ))}
         </div>

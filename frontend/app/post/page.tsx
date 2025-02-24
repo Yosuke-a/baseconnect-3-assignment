@@ -18,7 +18,6 @@ export default function Post() {
     formData.append("title", title);
     formData.append("category", selectedCategory);
     formData.append("income", String(income));
-
     const response = await addJobToDB(formData);
 
     if (!response.success) {
